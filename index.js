@@ -10,10 +10,20 @@
     },
  */
 
-const $ = document.querySelector.bind(document)
-const $$ = document.querySelectorAll.bind(document)
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
+const player = $('.player')
+const heading = $("header h2");
+const cdThumd = $(".cd-thumb");
+const audio = $("#audio");
+const cd = $(".cd");
+const playBtn = $('.btn-toggle-play')
+console.log(playBtn);
+console.log(player);
 
 const app = {
+  currentIndex: 0,
 
   songs: [
     {
@@ -64,27 +74,50 @@ const app = {
       singer: "Sơn Tùng MTP",
       path: "assets/music/song8.mp3",
       image: "assets/img/song8.jpg",
-    }
+    },
   ],
 
-  handleEvents: () => {
-    const cd = $('.cd')
-    const cdWidth = cd.offsetWidth
+  isPlaying: false,
 
+  defineProperty: function () {
+    Object.defineProperty(this, "currentSong", {
+      get: function () {
+        return this.songs[this.currentIndex];
+      },
+    });
+  },
+
+  handleEvents: function () {
+    const _this = this;
+    // xử lý phóng to thu nhỏ Cd
+    const cdWidth = cd.offsetWidth;
     document.onscroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-      const newCdWidth = cdWidth - scrollTop
-      cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const newCdWidth = cdWidth - scrollTop;
+      cd.style.width = newCdWidth > 0 ? newCdWidth + "px" : 0
       cd.style.opacity = newCdWidth / cdWidth
     }
-  }, 
-  
+
+    // xử lý khi click play
+    playBtn.onclick = () => {
+      if(_this.isPlaying) {
+        _this.isPlaying = false
+        audio.pause()
+        player.classList.remove('playing')
+      } else { 
+        _this.isPlaying = true
+        audio.play()
+        player.classList.add('playing')
+      }
+    } 
+  },
+
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `
        <div class="song">
           <div class="thumb" style="
-              background-image: url('${song.image}');
+              background-image: url('${song.image}')
             "></div>
           <div class="body">
             <h3 class="title">${song.name}</h3>
@@ -97,12 +130,27 @@ const app = {
       `
     })
 
-    $('.playlist').innerHTML = htmls.join('')
-  }, 
+    $(".playlist").innerHTML = htmls.join("")
+  },
+
+  loadCurrentSong: function () {
+    heading.textContent = this.currentSong.name
+    cdThumd.style.backgroundImage = `url('${this.currentSong.image}')`
+    audio.src = this.currentSong.path
+  },
 
   start: function () {
-    this.handleEvents()
-    this.render()
+    // định nghĩa các thuộc tính cho object
+    this.defineProperty();
+
+    // lắng nghe / xử lý các sự kiện (dom event)
+    this.handleEvents();
+
+    // tải thông tin bài hát đầu tiên vào UI khi chạy ứng dụng
+    this.loadCurrentSong();
+
+    // render
+    this.render();
   },
 };
 
