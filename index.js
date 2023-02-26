@@ -10,17 +10,17 @@
     },
  */
 
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
+const $ = document.querySelector.bind(document)
+const $$ = document.querySelectorAll.bind(document)
 
 const player = $('.player')
-const heading = $("header h2");
-const cdThumd = $(".cd-thumb");
-const audio = $("#audio");
-const cd = $(".cd");
+const heading = $("header h2")
+const cdThumd = $(".cd-thumb")
+const audio = $("#audio")
+const cd = $(".cd")
 const playBtn = $('.btn-toggle-play')
-console.log(playBtn);
-console.log(player);
+console.log(playBtn)
+console.log(player)
 
 const app = {
   currentIndex: 0,
@@ -88,12 +88,12 @@ const app = {
   },
 
   handleEvents: function () {
-    const _this = this;
+    const _this = this
     // xử lý phóng to thu nhỏ Cd
-    const cdWidth = cd.offsetWidth;
+    const cdWidth = cd.offsetWidth
     document.onscroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const newCdWidth = cdWidth - scrollTop;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const newCdWidth = cdWidth - scrollTop
       cd.style.width = newCdWidth > 0 ? newCdWidth + "px" : 0
       cd.style.opacity = newCdWidth / cdWidth
     }
@@ -108,7 +108,7 @@ const app = {
         _this.isPlaying = true
         audio.play()
         player.classList.add('playing')
-      }
+      } 
     } 
   },
 
