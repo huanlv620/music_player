@@ -2,7 +2,12 @@
  * 1. render songs
  * 2. scroll top
  * 3. play / pause / seek
- *
+ *{
+      name: "Intro",
+      singer: "Sơn Tùng MTP",
+      path: "assets/music/song1.mp3",
+      image: "assets/img/song1.jpg",
+    },
  */
 
 const $ = document.querySelector.bind(document)
@@ -48,8 +53,31 @@ const app = {
       path: "assets/music/song6.mp3",
       image: "assets/img/song6.jpg",
     },
+    {
+      name: "Âm thầm bên em",
+      singer: "Sơn Tùng MTP",
+      path: "assets/music/song7.mp3",
+      image: "assets/img/song7.jpg",
+    },
+    {
+      name: "Thái Bình Mồ Hôi Rơi",
+      singer: "Sơn Tùng MTP",
+      path: "assets/music/song8.mp3",
+      image: "assets/img/song8.jpg",
+    }
   ],
 
+  handleEvents: () => {
+    const cd = $('.cd')
+    const cdWidth = cd.offsetWidth
+
+    document.onscroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const newCdWidth = cdWidth - scrollTop
+      cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0
+    }
+  }, 
+  
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `
@@ -69,10 +97,10 @@ const app = {
     })
 
     $('.playlist').innerHTML = htmls.join('')
-
   }, 
 
   start: function () {
+    this.handleEvents()
     this.render()
   },
 };
