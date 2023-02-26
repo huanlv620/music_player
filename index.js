@@ -101,15 +101,23 @@ const app = {
     // xử lý khi click play
     playBtn.onclick = () => {
       if(_this.isPlaying) {
-        _this.isPlaying = false
         audio.pause()
-        player.classList.remove('playing')
       } else { 
-        _this.isPlaying = true
         audio.play()
-        player.classList.add('playing')
       } 
     } 
+    
+    // khi song dc play
+    audio.onplay = function() {
+      _this.isPlaying = true
+      player.classList.add('playing')
+    }
+
+    // khi song bị pause
+    audio.onpause = function() {
+      _this.isPlaying = false
+      player.classList.remove('playing')
+    }
   },
 
   render: function () {
