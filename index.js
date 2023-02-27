@@ -19,9 +19,7 @@ const cdThumd = $(".cd-thumb")
 const audio = $("#audio")
 const cd = $(".cd")
 const playBtn = $('.btn-toggle-play')
-console.log(playBtn)
-console.log(player)
-
+const progress = $('#progress');
 const app = {
   currentIndex: 0,
 
@@ -103,7 +101,7 @@ const app = {
       if(_this.isPlaying) {
         audio.pause()
       } else { 
-        audio.play()
+        audio.play() 
       } 
     } 
     
@@ -117,6 +115,16 @@ const app = {
     audio.onpause = function() {
       _this.isPlaying = false
       player.classList.remove('playing')
+    }
+
+
+    // khi tiến độ bài hát thay đổi
+    audio.ontimeupdate = function() {
+      if(audio.duration) {
+      //  const currentPercent = Math.floor(audio.currentTime / audio.duration * 100);
+       const currentPercent = audio.currentTime / audio.duration * 100;
+        progress.value = currentPercent
+      }
     }
   },
 
