@@ -21,6 +21,10 @@ const audio = $("#audio");
 const cd = $(".cd");
 const playBtn = $(".btn-toggle-play");
 const progress = $("#progress");
+const nextBtn = $(".btn-next");
+const prevBtn = $(".btn-prev");
+
+
 const app = {
   currentIndex: 0,
 
@@ -151,6 +155,18 @@ const app = {
       const seekTime = (audio.duration / 100) * e.target.value;
       audio.currentTime = seekTime;
     };
+
+    // khi next song
+    nextBtn.onclick = function() {
+      _this.nextSong();
+      audio.play();
+    }
+
+    // khi prev song
+    prevBtn.onclick = function() {
+      _this.prevSong();
+      audio.play();
+    }
   },
 
   render: function () {
@@ -179,6 +195,23 @@ const app = {
     cdThumd.style.backgroundImage = `url('${this.currentSong.image}')`;
     audio.src = this.currentSong.path;
   },
+
+  nextSong: function() {
+    this.currentIndex++
+    if(this.currentIndex >= this.songs.length) {
+      this.currentIndex = 0;
+    }
+    this.loadCurrentSong()
+  }, 
+
+  prevSong: function() {
+    this.currentIndex--
+    console.log(this.currentIndex, this.songs.length)
+    if(this.currentIndex < 0) {
+      this.currentIndex = this.songs.length - 1;
+    }
+    this.loadCurrentSong()
+  }, 
 
   start: function () {
     // định nghĩa các thuộc tính cho object
