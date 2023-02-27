@@ -2,6 +2,7 @@
  * 1. render songs
  * 2. scroll top
  * 3. play / pause / seek
+ * 4. CD rotate
  *{
       name: "Intro",
       singer: "Sơn Tùng MTP",
@@ -10,16 +11,16 @@
     },
  */
 
-const $ = document.querySelector.bind(document)
-const $$ = document.querySelectorAll.bind(document)
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 
-const player = $('.player')
-const heading = $("header h2")
-const cdThumd = $(".cd-thumb")
-const audio = $("#audio")
-const cd = $(".cd")
-const playBtn = $('.btn-toggle-play')
-const progress = $('#progress');
+const player = $(".player");
+const heading = $("header h2");
+const cdThumd = $(".cd-thumb");
+const audio = $("#audio");
+const cd = $(".cd");
+const playBtn = $(".btn-toggle-play");
+const progress = $("#progress");
 const app = {
   currentIndex: 0,
 
@@ -86,53 +87,70 @@ const app = {
   },
 
   handleEvents: function () {
-    const _this = this
+    const _this = this;
+
+    // xử lý CD quay / dừng
+    // animate https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+    const newspaperSpinning = [
+      {
+        transform: "rotate(360deg)",
+      }
+    ];
+    const newspaperTiming = {
+      duration: 10000, //10s
+        iterations: Infinity,
+    };
+    
+    const cdThumdAnimate = cdThumd.animate(newspaperSpinning, newspaperTiming);
+    cdThumdAnimate.pause();
+
     // xử lý phóng to thu nhỏ Cd
-    const cdWidth = cd.offsetWidth
+    const cdWidth = cd.offsetWidth;
     document.onscroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-      const newCdWidth = cdWidth - scrollTop
-      cd.style.width = newCdWidth > 0 ? newCdWidth + "px" : 0
-      cd.style.opacity = newCdWidth / cdWidth
-    }
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const newCdWidth = cdWidth - scrollTop;
+      cd.style.width = newCdWidth > 0 ? newCdWidth + "px" : 0;
+      cd.style.opacity = newCdWidth / cdWidth;
+    };
 
     // xử lý khi click play
     playBtn.onclick = () => {
-      if(_this.isPlaying) {
-        audio.pause()
-      } else { 
-        audio.play() 
-      } 
-    } 
-    
+      if (_this.isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+    };
+
     // khi song dc play
-    audio.onplay = function() {
-      _this.isPlaying = true
-      player.classList.add('playing')
-    }
+    audio.onplay = function () {
+      _this.isPlaying = true;
+      player.classList.add("playing");
+      cdThumdAnimate.play();
+    };
 
     // khi song bị pause
-    audio.onpause = function() {
-      _this.isPlaying = false
-      player.classList.remove('playing')
-    }
-
+    audio.onpause = function () {
+      _this.isPlaying = false;
+      player.classList.remove("playing");
+      cdThumdAnimate.pause();
+    };
 
     // khi tiến độ bài hát thay đổi
-    audio.ontimeupdate = function() {
-      if(audio.duration) {
-      //  const currentPercent = Math.floor(audio.currentTime / audio.duration * 100);
-       const currentPercent = audio.currentTime / audio.duration * 100;
-        progress.value = currentPercent
+    audio.ontimeupdate = function () {
+      if (audio.duration) {
+        //  const currentPercent = Math.floor(audio.currentTime / audio.duration * 100);
+        const currentPercent = (audio.currentTime / audio.duration) * 100;
+        progress.value = currentPercent;
       }
-    }
-    
+    };
+
     // xử lý khi tua song
-    progress.onchange = function(e) {
-        // this e.target.value = 40%
-        const seekTime = (audio.duration / 100 * e.target.value)
-        audio.currentTime = seekTime
-    }
+    progress.onchange = function (e) {
+      // this e.target.value = 40%
+      const seekTime = (audio.duration / 100) * e.target.value;
+      audio.currentTime = seekTime;
+    };
   },
 
   render: function () {
@@ -150,16 +168,16 @@ const app = {
             <i class="fas fa-ellipsis-h"></i>
           </div>
         </div>
-      `
-    })
+      `;
+    });
 
-    $(".playlist").innerHTML = htmls.join("")
+    $(".playlist").innerHTML = htmls.join("");
   },
 
   loadCurrentSong: function () {
-    heading.textContent = this.currentSong.name
-    cdThumd.style.backgroundImage = `url('${this.currentSong.image}')`
-    audio.src = this.currentSong.path
+    heading.textContent = this.currentSong.name;
+    cdThumd.style.backgroundImage = `url('${this.currentSong.image}')`;
+    audio.src = this.currentSong.path;
   },
 
   start: function () {
