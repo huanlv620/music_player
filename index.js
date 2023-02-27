@@ -126,6 +126,13 @@ const app = {
         progress.value = currentPercent
       }
     }
+    
+    // xử lý khi tua song
+    progress.onchange = function(e) {
+        // this e.target.value = 40%
+        const seekTime = (audio.duration / 100 * e.target.value)
+        audio.currentTime = seekTime
+    }
   },
 
   render: function () {
