@@ -3,6 +3,12 @@
  * 2. scroll top
  * 3. play / pause / seek
  * 4. CD rotate
+ * 5. next / prev
+ * 6. random song 
+ * 7. next / repeat when ended
+ * 8. active song
+ * 9. Scroll active song into view
+ * 10. play song when click 
  *{
       name: "Intro",
       singer: "Sơn Tùng MTP",
@@ -23,6 +29,7 @@ const playBtn = $(".btn-toggle-play");
 const progress = $("#progress");
 const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
+const randomBtn = $(".btn-random");
 
 
 const app = {
@@ -81,6 +88,7 @@ const app = {
   ],
 
   isPlaying: false,
+  isRandom: false,
 
   defineProperty: function () {
     Object.defineProperty(this, "currentSong", {
@@ -158,15 +166,46 @@ const app = {
 
     // khi next song
     nextBtn.onclick = function() {
-      _this.nextSong();
+      if(_this.isRandom) {
+        _this.playRanDomSong()
+      } else {
+        _this.nextSong();
+      }
       audio.play();
     }
 
     // khi prev song
     prevBtn.onclick = function() {
-      _this.prevSong();
+      if(_this.isRandom) {
+        _this.playRanDomSong()
+      } else {
+        _this.prevSong();
+      }
       audio.play();
     }
+
+    // random song
+    randomBtn.onclick = function(e) { 
+      _this.isRandom = !_this.isRandom
+      randomBtn.classList.toggle("active", _this.isRandom);
+      _this.playRanDomSong()
+
+
+      // if(this.isRandom) {
+      //   randomBtn.classList.remove("active");
+      //   this.isRandom = false;
+      // } else {
+      //   randomBtn.classList.add("active");
+      //   this.isRandom = true;
+      // }
+    }
+
+    // xử lý next song ->khi audio ended
+    audio.onended = function() {
+
+    }
+    // 1h8p47s
+
   },
 
   render: function () {
@@ -206,10 +245,17 @@ const app = {
 
   prevSong: function() {
     this.currentIndex--
-    console.log(this.currentIndex, this.songs.length)
     if(this.currentIndex < 0) {
       this.currentIndex = this.songs.length - 1;
     }
+    this.loadCurrentSong()
+  }, 
+  playRanDomSong: function() {
+    let newIndex
+    do {
+      newIndex = Math.floor(Math.random() * this.songs.length)
+    } while (newIndex === this.currentIndex)
+    this.currentIndex = newIndex
     this.loadCurrentSong()
   }, 
 
