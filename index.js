@@ -30,7 +30,7 @@ const progress = $("#progress");
 const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
 const randomBtn = $(".btn-random");
-
+const repeatBtn = $(".btn-repeat");
 
 const app = {
   currentIndex: 0,
@@ -89,6 +89,7 @@ const app = {
 
   isPlaying: false,
   isRandom: false,
+  isReapeat: false,
 
   defineProperty: function () {
     Object.defineProperty(this, "currentSong", {
@@ -172,6 +173,7 @@ const app = {
         _this.nextSong();
       }
       audio.play();
+      _this.render();
     }
 
     // khi prev song
@@ -199,10 +201,20 @@ const app = {
       //   this.isRandom = true;
       // }
     }
+    
+    // Xử lý lặp lại một bài hát
+    repeatBtn.onclick = function (e) { 
+      _this.isReapeat = !_this.isReapeat
+      repeatBtn.classList.toggle("active", _this.isReapeat);
+    }
 
     // xử lý next song ->khi audio ended
     audio.onended = function() {
-
+      if(_this.isReapeat) {
+        audio.play();
+      } else { 
+        nextBtn.click()
+      }
     }
     // 1h8p47s
 
@@ -211,7 +223,7 @@ const app = {
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `
-       <div class="song">
+       <div class="song ${index === this.currentIndex ? 'active' : ''}">
           <div class="thumb" style="
               background-image: url('${song.image}')
             "></div>
@@ -273,5 +285,4 @@ const app = {
     this.render();
   },
 };
-
 app.start();
