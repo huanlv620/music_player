@@ -31,7 +31,7 @@ const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
-
+const playlist = $(".playlist")
 const app = {
   currentIndex: 0,
 
@@ -159,7 +159,8 @@ const app = {
     };
 
     // xử lý khi tua song
-    progress.onchange = function (e) {
+      // onchange sửa thành on input
+    progress.oninput = function (e) {
       // this e.target.value = 40%
       const seekTime = (audio.duration / 100) * e.target.value;
       audio.currentTime = seekTime;
@@ -240,7 +241,7 @@ const app = {
       `;
     });
 
-    $(".playlist").innerHTML = htmls.join("");
+    playlist.innerHTML = htmls.join("");
   },
   scrollToActiveSong: function () {
     setTimeout(function () {
