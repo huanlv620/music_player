@@ -174,6 +174,7 @@ const app = {
       }
       audio.play();
       _this.render();
+      _this.scrollToActiveSong();
     }
 
     // khi prev song
@@ -184,6 +185,7 @@ const app = {
         _this.prevSong();
       }
       audio.play();
+      _this.render();
     }
 
     // random song
@@ -240,7 +242,14 @@ const app = {
 
     $(".playlist").innerHTML = htmls.join("");
   },
-
+  scrollToActiveSong: function () {
+    setTimeout(function () {
+      $('.song.active').scrollIntoView({
+        behavior: 'smooth', 
+        block: 'center'
+      })
+    }, 300)
+  },
   loadCurrentSong: function () {
     heading.textContent = this.currentSong.name;
     cdThumd.style.backgroundImage = `url('${this.currentSong.image}')`;
