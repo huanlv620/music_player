@@ -219,14 +219,34 @@ const app = {
         nextBtn.click()
       }
     }
-    // 1h8p47s
 
+    // lắng nghe hành vi click và playlist 
+    playlist.onclick = function (e) {
+      const songNote = e.target.closest('.song:not(.active') 
+      //.song:not(.active) khoong co class active 
+      if( songNote || e.target.closest('.option')){
+        // xử lý khi click vào song
+        if(songNote) {
+          _this.currentIndex = Number(songNote.dataset.index)
+          _this.loadCurrentSong()
+          _this.render()
+          audio.play()
+          // songNote.getAttribute('data-index') = (songNote.dataset.index)
+
+        }
+
+        // xử lý khi click vào song option
+        if(e.target.closest('.option')) {
+
+        }
+      }
+    }
   },
 
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `
-       <div class="song ${index === this.currentIndex ? 'active' : ''}">
+       <div class="song ${index === this.currentIndex ? 'active' : ''}" data-index ='${index}'>
           <div class="thumb" style="
               background-image: url('${song.image}')
             "></div>
